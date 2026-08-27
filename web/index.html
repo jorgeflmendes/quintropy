@@ -189,9 +189,15 @@
             <p>Latest answer visible to the deployed prior.</p>
           </div>
           <div>
-            <dt>Prediction date</dt>
+            <dt>Snapshot reference date</dt>
             <dd id="prediction-date">Loading</dd>
-            <p>The frozen snapshot was generated for this next puzzle.</p>
+            <p>
+              The solver can process any compatible Wordle board, but this prior was generated
+              for this date. Earlier puzzles introduce look-ahead leakage; later puzzles face
+              increasing editorial drift and may include answers already used after the cutoff.
+              Its probability estimates generally become less representative as the target date
+              moves farther away.
+            </p>
           </div>
           <div>
             <dt>Evaluation design</dt>

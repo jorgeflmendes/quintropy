@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#171714">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; worker-src 'self'; form-action 'none'"
+    >
+    <meta
+      name="description"
+      content="A private, in-browser Wordle assistant powered by Quintropy's causal Bayesian model."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Quintropy — Local Wordle Solver">
+    <meta
+      property="og:description"
+      content="A private Wordle assistant that runs Quintropy's selected model entirely in your browser."
+    >
+    <meta property="og:image" content="https://jorgeflmendes.github.io/quintropy/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Quintropy — Local Wordle Solver">
+    <meta
+      name="twitter:description"
+      content="A private Wordle assistant that runs Quintropy's selected model entirely in your browser."
+    >
+    <meta name="twitter:image" content="https://jorgeflmendes.github.io/quintropy/og.png">
+    <title>Quintropy — Local Wordle Solver</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Quintropy home">
+        <img src="./favicon.svg" alt="" width="34" height="34">
+        <span>Quintropy</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Causal Bayesian assistant</p>
+        <h1 id="hero-title">Turn your board into the next best word.</h1>
+        <p class="hero-copy">
+          Enter each guess, match its tile colours, and let the selected Quintropy model search
+          the complete action space. Nothing you type leaves this browser.
+        </p>
+        <div class="snapshot-strip" aria-label="Model snapshot details">
+          <span><strong id="action-count">12,972</strong> playable words</span>
+          <span><strong id="answer-count">8,926</strong> candidate answers</span>
+          <span><strong id="snapshot-date">Loading</strong> training cutoff</span>
+        </div>
+      </section>
+
+      <section class="solver" aria-label="Wordle solver">
+        <div class="board-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">Your board</p>
+              <h2>Enter the board exactly</h2>
+            </div>
+            <button id="reset-button" class="text-button" type="button">Reset board</button>
+          </div>
+
+          <div class="entry-guide" aria-label="How to enter a Wordle row">
+            <p><span>1</span> Type the word you played.</p>
+            <p><span>2</span> Click its five letter tiles until their colours match Wordle.</p>
+          </div>
+          <div class="board-columns" aria-hidden="true">
+            <span>Played word</span>
+            <span>Feedback — click each tile</span>
+          </div>
+          <div id="board" class="board"></div>
+
+          <div class="legend" aria-label="Tile feedback legend">
+            <span><i class="legend-tile absent" aria-hidden="true"></i> Grey: not in the word</span>
+            <span><i class="legend-tile present" aria-hidden="true"></i> Yellow: wrong position</span>
+            <span><i class="legend-tile correct" aria-hidden="true"></i> Green: correct position</span>
+          </div>
+
+          <p class="board-help">
+            New tiles start grey. One click makes a tile yellow, two make it green, and a third
+            returns it to grey. Add guesses from oldest to newest.
+          </p>
+          <p id="board-error" class="error-message" role="alert"></p>
+          <button id="solve-button" class="primary-button" type="button" disabled>
+            <span>Find my next word</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <aside id="result-panel" class="result-panel" aria-live="polite">
+          <div id="loading-state" class="result-state">
+            <span class="spinner" aria-hidden="true"></span>
+            <p class="section-label">Loading model</p>
+            <h2>Preparing the local solver…</h2>
+            <p>The trained snapshot is being loaded into your browser.</p>
+          </div>
+
+          <div id="empty-state" class="result-state" hidden>
+            <p class="section-label">No guesses entered</p>
+            <h2>Start with</h2>
+            <div class="word-display" id="starter-word">SOARE</div>
+            <p id="starter-explanation">
+              This is the opening action fixed by the evaluated policy. With no board evidence,
+              the solver deliberately does not adapt the opener to the current puzzle.
+            </p>
+          </div>
+
+          <div id="working-state" class="result-state" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <p class="section-label">Searching locally</p>
+            <h2 id="working-title">Scoring all playable words…</h2>
+            <div class="progress-track" aria-hidden="true">
+              <span id="progress-bar"></span>
+            </div>
+            <p id="progress-copy">Filtering candidate answers.</p>
+          </div>
+
+          <div id="recommendation-state" class="result-state" hidden>
+            <p class="section-label">Recommended next guess</p>
+            <div class="recommendation-line">
+              <div id="recommended-word" class="word-display">SOARE</div>
+              <button id="copy-button" class="icon-button" type="button" aria-label="Copy recommended word">
+                Copy
+              </button>
+            </div>
+            <h2 id="recommendation-lead" class="recommendation-lead"></h2>
+            <p id="recommendation-reason" class="recommendation-reason"></p>
+            <div id="decision-equation" class="decision-equation" hidden>
+              <span>Decision calculation</span>
+              <code id="decision-equation-value"></code>
+            </div>
+            <dl class="metric-grid">
+              <div>
+                <dt>Possible answers</dt>
+                <dd id="candidate-count">—</dd>
+              </div>
+              <div>
+                <dt>Chance it is the answer</dt>
+                <dd id="answer-probability">—</dd>
+              </div>
+              <div>
+                <dt>Expected information</dt>
+                <dd id="information-score">—</dd>
+              </div>
+            </dl>
+            <div class="candidate-section">
+              <div class="candidate-heading">
+                <h3>Most likely answers</h3>
+                <span>Posterior</span>
+              </div>
+              <ol id="candidate-list" class="candidate-list"></ol>
+            </div>
+          </div>
+
+          <div id="no-candidates-state" class="result-state" hidden>
+            <p class="section-label">Board conflict</p>
+            <h2>No candidate matches every row.</h2>
+            <p>Check the tile colours, especially repeated letters, and try again.</p>
+          </div>
+
+          <div id="solved-state" class="result-state" hidden>
+            <p class="section-label">Puzzle complete</p>
+            <h2>Every tile is green.</h2>
+            <p>No further recommendation is needed for this board.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="model-card" aria-labelledby="model-card-title">
+        <div class="model-card-heading">
+          <p class="section-label">Model card</p>
+          <h2 id="model-card-title">What the recommendation means.</h2>
+          <p>
+            Quintropy estimates <em>P(answer | history before cutoff, board feedback)</em>. It then
+            evaluates every permitted guess using feedback entropy and direct-answer probability,
+            with exact dynamic programming when three or fewer candidates remain.
+          </p>
+        </div>
+
+        <dl class="model-facts">
+          <div>
+            <dt>Knowledge cutoff</dt>
+            <dd id="model-cutoff">Loading</dd>
+            <p>Latest answer visible to the deployed prior.</p>
+          </div>
+          <div>
+            <dt>Prediction date</dt>
+            <dd id="prediction-date">Loading</dd>
+            <p>The frozen snapshot was generated for this next puzzle.</p>
+          </div>
+          <div>
+            <dt>Evaluation design</dt>
+            <dd>104 puzzles</dd>
+            <p>Causal walk-forward replay, 1 May–12 August 2026.</p>
+          </div>
+        </dl>
+
+        <div class="evaluation-heading">
+          <h3>Estimated out-of-sample performance</h3>
+          <p>Measured on the frozen walk-forward evaluation, not on the current live puzzle.</p>
+        </div>
+        <dl class="evaluation-grid">
+          <div>
+            <dt>Solved within 6</dt>
+            <dd>100%</dd>
+            <p>104/104; Wilson IID sensitivity interval: 96.4–100%.</p>
+          </div>
+          <div>
+            <dt>Mean guesses</dt>
+            <dd>3.08</dd>
+            <p>Moving-block bootstrap 95% interval: 2.97–3.18.</p>
+          </div>
+          <div>
+            <dt>Median guesses</dt>
+            <dd>3</dd>
+            <p>The middle observed solve required three guesses.</p>
+          </div>
+          <div>
+            <dt>Worst observed</dt>
+            <dd>6</dd>
+            <p>One of the 104 evaluated puzzles required all six guesses.</p>
+          </div>
+        </dl>
+        <p class="evaluation-note">
+          These are retrospective estimates from a finite, time-dependent sample. They describe
+          the evaluated policy and do not guarantee future performance.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Quintropy</span>
+      <p>Independent research project. Unaffiliated with The New York Times Company.</p>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

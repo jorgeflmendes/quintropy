@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Inputs and published outputs are byte-frozen because SHA256SUMS attests to
+# their exact contents; Git must not rewrite their line endings on checkout.
+data/** -text
+results/** -text
+*.npz binary

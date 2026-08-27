@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Quintropy mark">
+  <rect width="64" height="64" rx="14" fill="#20201d"/>
+  <rect x="9" y="27" width="7" height="22" rx="3.5" fill="#8b7cf6" opacity="0.45"/>
+  <rect x="19" y="19" width="7" height="30" rx="3.5" fill="#8b7cf6" opacity="0.65"/>
+  <rect x="29" y="10" width="7" height="39" rx="3.5" fill="#8b7cf6"/>
+  <rect x="39" y="19" width="7" height="30" rx="3.5" fill="#8b7cf6" opacity="0.65"/>
+  <rect x="49" y="27" width="7" height="22" rx="3.5" fill="#8b7cf6" opacity="0.45"/>
+</svg>

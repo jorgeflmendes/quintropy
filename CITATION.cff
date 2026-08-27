@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: Quintropy
+message: "If you use this research package, cite the repository version and the third-party datasets listed in README.md."
+type: software
+authors:
+  - alias: Jorge Filipe
+version: 0.9.0
+date-released: 2026-08-27
+repository-code: "https://github.com/jorgeflmendes/quintropy"
+url: "https://github.com/jorgeflmendes/quintropy"

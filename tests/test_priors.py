@@ -256,9 +256,9 @@ def test_history_is_a_complete_daily_sequence():
     history = load_history()
     assert np.all(np.diff(history["game"]) == 1)
     assert np.all(history["date"].diff().dropna().dt.days == 1)
-    assert history.iloc[-1]["game"] == 1893
-    assert history.iloc[-1]["date"] == pd.Timestamp("2026-08-25")
-    assert history.iloc[-1]["answer"] == "click"
+    assert history.iloc[-1]["game"] == 1903
+    assert history.iloc[-1]["date"] == pd.Timestamp("2026-09-04")
+    assert history.iloc[-1]["answer"] == "wager"
 
 
 def test_linguistic_default_uses_temporally_selected_regularization():

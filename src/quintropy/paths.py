@@ -17,5 +17,6 @@ else:
 WORDLISTS_DIR = DATA_DIR / "wordlists"
 HISTORY_PATH = DATA_DIR / "history" / "played_5_2026-08-12.csv"
 HISTORY_EXTENSION_PATH = DATA_DIR / "history" / "played_5_2026-08-13_2026-08-25.csv"
+HISTORY_UPDATES_PATH = DATA_DIR / "history" / "played_5_2026-08-26_2026-09-04.csv"
 FREQUENCY_PATH = DATA_DIR / "frequency" / "frequency_list.txt"
 RESULTS_DIR = ROOT / "results"

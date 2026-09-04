@@ -13,7 +13,13 @@ import numpy as np
 import pandas as pd
 from wordfreq import zipf_frequency
 
-from .paths import FREQUENCY_PATH, HISTORY_EXTENSION_PATH, HISTORY_PATH, WORDLISTS_DIR
+from .paths import (
+    FREQUENCY_PATH,
+    HISTORY_EXTENSION_PATH,
+    HISTORY_PATH,
+    HISTORY_UPDATES_PATH,
+    WORDLISTS_DIR,
+)
 
 WORD_RE = re.compile(r'"([a-z]{5})"')
 
@@ -100,7 +106,7 @@ def load_history() -> pd.DataFrame:
     history = pd.concat(
         (
             pd.read_csv(path, parse_dates=["date"])
-            for path in (HISTORY_PATH, HISTORY_EXTENSION_PATH)
+            for path in (HISTORY_PATH, HISTORY_EXTENSION_PATH, HISTORY_UPDATES_PATH)
         ),
         ignore_index=True,
     )
@@ -161,6 +167,7 @@ class DataProvenance:
     frequency_sha256: str
     history_sha256: str
     history_extension_sha256: str
+    history_updates_sha256: str
 
 
 def data_provenance() -> DataProvenance:
@@ -172,6 +179,7 @@ def data_provenance() -> DataProvenance:
         frequency_sha256=sha256(FREQUENCY_PATH),
         history_sha256=sha256(HISTORY_PATH),
         history_extension_sha256=sha256(HISTORY_EXTENSION_PATH),
+        history_updates_sha256=sha256(HISTORY_UPDATES_PATH),
     )
 
 

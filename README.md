@@ -211,7 +211,7 @@ integrity, complete policy replay and independent metric recomputation.
 | ------ | --- | ----------- |
 | [Laurent Lessard's wordlesolver](https://github.com/LaurentLessard/wordlesolver) | Classic answer and action lists | No explicit upstream license was found; confirm redistribution rights |
 | [english-word-frequency](https://github.com/ps-kostikov/english-word-frequency) | Local English-frequency data | No explicit upstream license was found; confirm redistribution rights |
-| [nyt-wordle-played](https://github.com/johnfoland/nyt-wordle-played) | Append-only chronological history through 2026-08-25 | CC0 1.0 Universal |
+| [nyt-wordle-played](https://github.com/johnfoland/nyt-wordle-played) and the [official daily endpoint](https://www.nytimes.com/svc/wordle/v2/2026-09-04.json) | Chronological history verified through 2026-09-04 | CC0 upstream archive; factual daily puzzle metadata |
 
 ## Current limitations
 

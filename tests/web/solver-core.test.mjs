@@ -98,14 +98,14 @@ test("an information-only recommendation is identified as a zero-hit probe", asy
   );
   const model = prepareModel(snapshot);
   const result = await solveBoard(model, [
-    { word: "soare", feedback: [1, 2, 0, 0, 0] },
+    { word: "soare", feedback: [0, 0, 2, 0, 2] },
   ]);
 
-  assert.equal(result.candidateCount, 250);
-  assert.equal(result.word, "munts");
+  assert.equal(result.candidateCount, 50);
+  assert.equal(result.word, "clipt");
   assert.equal(result.reason, "information");
   assert.equal(result.answerProbability, 0);
   assert.equal(result.effectiveHitProbability, 0);
   assert.equal(result.utility, result.entropy);
-  assert.equal(result.topCandidates[0].word, "joist");
+  assert.equal(result.topCandidates[0].word, "place");
 });

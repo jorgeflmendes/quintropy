@@ -51,6 +51,7 @@ where = ["src"]
 "share/quintropy/data/history" = [
   "data/history/played_5_2026-08-12.csv",
   "data/history/played_5_2026-08-13_2026-08-25.csv",
+  "data/history/played_5_2026-08-26_2026-09-04.csv",
 ]
 "share/quintropy/data/wordlists" = [
   "data/wordlists/nonsolutions_classic_10657.txt",
